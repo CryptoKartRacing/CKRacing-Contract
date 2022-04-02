@@ -1,3 +1,3 @@
 # CKRacing-Contract
 
-https://bscscan.com/address/0xfdd4b7348c426ce87241d110220dba923fe8cfb4
+https://bscscan.com/address/0x4502F025d6096F3C821969d06f29014704c9826e
