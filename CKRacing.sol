@@ -1,7 +1,3 @@
-/**
- *Submitted for verification at BscScan.com on 2022-03-28
-*/
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
@@ -1330,7 +1326,7 @@ contract CKRacing is ERC20, Ownable {
     
     uint256 public maxTransactionAmount;
     uint256 public swapTokensAtAmount;
-    uint256 public maxWallet;
+    uint256 public maxWalletHolding;
 
     bool public limitsInEffect = true;
     bool public tradingActive = false;
@@ -1409,7 +1405,7 @@ contract CKRacing is ERC20, Ownable {
 
         address newOwner = msg.sender;
         
-        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x10ED43C718714eb63d5aA57B78B54704E256024E); //(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0xeC0A7a0C2439E8Cb67b992b12ecd020Ea943c7Be); //(PCS 0x10ED43C718714eb63d5aA57B78B54704E256024E);
         
         excludeFromMaxTransaction(address(_uniswapV2Router), true);
         uniswapV2Router = _uniswapV2Router;
@@ -1433,7 +1429,7 @@ contract CKRacing is ERC20, Ownable {
         maxTransactionAmount = totalSupply * 5 / 1000; // 0.5% maxTransactionAmountTxn
         // swapTokensAtAmount = totalSupply * 5 / 10000; // 0.05% swap wallet
         swapTokensAtAmount = 10000 * 1e18; 
-        maxWallet = totalSupply * 15 / 1000; // 1.5% max wallet
+        maxWalletHolding = totalSupply * 15 / 1000; // 1.5% max wallet
 
         buyMarketingFee = _buyMarketingFee;
         buyLiquidityFee = _buyLiquidityFee;
@@ -1572,9 +1568,9 @@ contract CKRacing is ERC20, Ownable {
         maxTransactionAmount = newNum * (10**18);
     }
 
-    function setMaxWalletAmount(uint256 newNum) external onlyOwner {
+    function setmaxWalletHoldingAmount(uint256 newNum) external onlyOwner {
         require(newNum >= 1 * 10**7, "Error: Max Wallet has to be equal to or greater than 10M");
-        maxWallet = newNum * (10**18);
+        maxWalletHolding = newNum * (10**18);
     }
     
     function excludeFromMaxTransaction(address updAds, bool isEx) public onlyOwner {
@@ -1716,7 +1712,7 @@ contract CKRacing is ERC20, Ownable {
                 //when buy
                 if (automatedMarketMakerPairs[from] && !_isExcludedMaxTransactionAmount[to]) {
                         require(amount <= maxTransactionAmount, "Buy transfer amount exceeds the maxTransactionAmount.");
-                        require(amount + balanceOf(to) <= maxWallet, "Max wallet exceeded");
+                        require(amount + balanceOf(to) <= maxWalletHolding, "Max wallet exceeded");
                 }
                 
                 //when sell
@@ -1724,7 +1720,7 @@ contract CKRacing is ERC20, Ownable {
                         require(amount <= maxTransactionAmount, "Sell transfer amount exceeds the maxTransactionAmount.");
                 }
                 else {
-                    require(amount + balanceOf(to) <= maxWallet, "Max wallet exceeded");
+                    require(amount + balanceOf(to) <= maxWalletHolding, "Max wallet exceeded");
                 }
             }
         }
